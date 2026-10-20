@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bar Assistant Pro - Cocktails & Spirits Guide</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://media.istockphoto.com; connect-src 'self'; object-src 'none'; base-uri 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
@@ -1210,10 +1212,20 @@
         const byName = (a, b) => a.name.localeCompare(b.name);
         const norm = (s = "") => String(s).toLowerCase();
         const escapeHtml = (s = "") =>
-          String(s)
+          String(s ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+
+        const sanitizeUrl = (url = "") => {
+          const trimmed = String(url || "").trim();
+          if (/^(https?:\/\/|\/|\.\/|data:image\/)/i.test(trimmed)) {
+            return escapeHtml(trimmed);
+          }
+          return "";
+        };
 
         function debounce(fn, ms = 300) {
           let t;
@@ -1318,7 +1330,7 @@
                 <div class="card-category">${escapeHtml(cap(item.category))}</div>
               </div>
               <div class="card-image">
-                ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" width="400" height="260" loading="lazy" decoding="async">` : `<div class="card-image-placeholder">🍸</div>`}
+                ${item.image && sanitizeUrl(item.image) ? `<img src="${sanitizeUrl(item.image)}" alt="${escapeHtml(item.name)}" width="400" height="260" loading="lazy" decoding="async">` : `<div class="card-image-placeholder">🍸</div>`}
               </div>
               <div class="card-content">
                 <p class="card-description">${escapeHtml(item.description || "")}</p>

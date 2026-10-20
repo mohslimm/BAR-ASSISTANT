@@ -28,6 +28,23 @@ const cocktailForm = document.getElementById('cocktailForm');
 const btnAddIngredient = document.getElementById('btnAddIngredient');
 const ingredientsList = document.getElementById('ingredientsList');
 
+// Security & Sanitization Utilities
+const escapeHtml = (s = '') =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const sanitizeUrl = (url = '') => {
+  const trimmed = String(url || '').trim();
+  if (/^(https?:\/\/|\/|\.\/|data:image\/)/i.test(trimmed)) {
+    return escapeHtml(trimmed);
+  }
+  return '';
+};
+
 let customCocktails = JSON.parse(localStorage.getItem('customCocktails')) || [];
 
 // Initialization
@@ -161,40 +178,42 @@ function renderCustomRecipes() {
 function createCard(item, isCustom = false) {
   const card = document.createElement('div');
   card.className = 'recipe-card';
-  card.innerHTML = \`
-    <div class="card-image" style="background-image: url('\${item.image || ''}')">\${!item.image ? '🍸' : ''}</div>
+  const safeImg = sanitizeUrl(item.image);
+  card.innerHTML = `
+    <div class="card-image" style="background-image: url('${safeImg}')">${!safeImg ? '🍸' : ''}</div>
     <div class="card-content">
-      <div class="card-category">\${item.category || 'Cocktail'} \${isCustom ? '<span class="badge">Custom</span>' : ''}</div>
-      <h3 class="card-title">\${item.name}</h3>
-      <p class="card-desc">\${item.description || 'A custom crafted recipe.'}</p>
+      <div class="card-category">${escapeHtml(item.category || 'Cocktail')} ${isCustom ? '<span class="badge">Custom</span>' : ''}</div>
+      <h3 class="card-title">${escapeHtml(item.name)}</h3>
+      <p class="card-desc">${escapeHtml(item.description || 'A custom crafted recipe.')}</p>
     </div>
-  \`;
+  `;
   card.addEventListener('click', () => openDetailModal(item));
   return card;
 }
 
 function openDetailModal(item) {
-  detailTitle.textContent = item.name;
-  detailEmoji.innerHTML = item.image ? \`<img src="\${item.image}" alt="\${item.name}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">\` : '🍸';
+  detailTitle.textContent = item.name || '';
+  const safeImg = sanitizeUrl(item.image);
+  detailEmoji.innerHTML = safeImg ? `<img src="${safeImg}" alt="${escapeHtml(item.name)}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">` : '🍸';
   
-  detailMeta.innerHTML = \`
-    \${item.strength ? \`<span>💪 \${item.strength}</span>\` : ''}
-    \${item.difficulty ? \`<span>⏱️ \${item.difficulty}</span>\` : ''}
-    \${item.glass ? \`<span>🥃 \${item.glass}</span>\` : ''}
-  \`;
+  detailMeta.innerHTML = `
+    ${item.strength ? `<span>💪 ${escapeHtml(item.strength)}</span>` : ''}
+    ${item.difficulty ? `<span>⏱️ ${escapeHtml(item.difficulty)}</span>` : ''}
+    ${item.glass ? `<span>🥃 ${escapeHtml(item.glass)}</span>` : ''}
+  `;
 
-  let bodyHtml = \`<div class="detail-description">\${item.description || 'No description provided.'}</div>\`;
+  let bodyHtml = `<div class="detail-description">${escapeHtml(item.description || 'No description provided.')}</div>`;
 
   if (item.ingredients && item.ingredients.length > 0) {
     bodyHtml += '<div class="detail-section"><h3>Ingredients</h3><ul class="ingredient-list">';
     item.ingredients.forEach(ing => {
-      bodyHtml += \`<li><span>\${ing.name}</span> <span class="amount">\${ing.amount}</span></li>\`;
+      bodyHtml += `<li><span>${escapeHtml(ing.name)}</span> <span class="amount">${escapeHtml(ing.amount)}</span></li>`;
     });
     bodyHtml += '</ul></div>';
   }
 
   if (item.method) {
-    bodyHtml += \`<div class="detail-section"><h3>Preparation</h3><p style="white-space:pre-wrap; line-height:1.6; color:var(--text-gray);">\${item.method}</p></div>\`;
+    bodyHtml += `<div class="detail-section"><h3>Preparation</h3><p style="white-space:pre-wrap; line-height:1.6; color:var(--text-gray);">${escapeHtml(item.method)}</p></div>`;
   }
 
   detailBody.innerHTML = bodyHtml;
