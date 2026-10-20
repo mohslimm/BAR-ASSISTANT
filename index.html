@@ -3,7 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar Assistant Pro - Cocktails & Spirits Guide</title>
+    <title>Bar Assistant Pro — Premium Mixology & Spirits Intelligence Guide</title>
+    <meta name="description" content="Bar Assistant Pro — Curated digital mixology guide, craft cocktail recipes, spirits database, glassware pairing, and professional bar operations suite.">
+    <meta name="author" content="Mohamed Slimani - Stepping Stones Agency">
+    <link rel="canonical" href="https://mohslimm.github.io/BAR-ASSISTANT/">
+
+    <!-- Open Graph / Social SEO -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bar Assistant Pro — Premium Mixology & Spirits Guide">
+    <meta property="og:description" content="Explore master cocktail recipes, precision ingredients, glassware pairing, and tasting profiles with zero latency.">
+    <meta property="og:url" content="https://mohslimm.github.io/BAR-ASSISTANT/">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1200&q=80">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bar Assistant Pro — Master Mixology Suite">
+    <meta name="twitter:description" content="High-end cocktail curation and spirits intelligence platform.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1200&q=80">
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Bar Assistant Pro",
+      "url": "https://mohslimm.github.io/BAR-ASSISTANT/",
+      "description": "High-end digital cocktail guide and spirits intelligence platform.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "All",
+      "author": {
+        "@type": "Person",
+        "name": "Mohamed Slimani"
+      }
+    }
+    </script>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://images.unsplash.com https://media.istockphoto.com; connect-src 'self'; object-src 'none'; base-uri 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -723,14 +756,14 @@
             </select>
         </div>
 
-        <div class="content" id="contentArea"></div>
+        <div class="content" id="contentArea" aria-live="polite" aria-atomic="true"></div>
     </div>
 
-    <div class="modal" id="detailModal">
+    <div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle"></h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <button class="close-btn" onclick="closeModal()" aria-label="Close recipe details">&times;</button>
             </div>
             <div id="modalBody"></div>
         </div>
