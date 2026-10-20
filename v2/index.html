@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bar Assistant Pro - Master Mixologist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🍸</span>
+        <span class="logo-text">Bar Assistant</span>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="discover">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Discover</span>
+      </button>
+      <button class="nav-item" data-view="cocktails">
+        <span class="nav-icon">🍹</span>
+        <span class="nav-label">Cocktails</span>
+        <span class="nav-count" id="cocktailCount">0</span>
+      </button>
+      <button class="nav-item" data-view="wines">
+        <span class="nav-icon">🍷</span>
+        <span class="nav-label">Wines</span>
+        <span class="nav-count" id="wineCount">0</span>
+      </button>
+      <button class="nav-item" data-view="beers">
+        <span class="nav-icon">🍺</span>
+        <span class="nav-label">Beers</span>
+        <span class="nav-count" id="beerCount">0</span>
+      </button>
+      <button class="nav-item" data-view="custom">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">My Cocktails</span>
+        <span class="nav-count" id="customCount">0</span>
+      </button>
+      <button class="nav-item" data-view="assistant">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">AI Assistant</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-create" id="btnCreateCocktail">
+        <span>➕</span>
+        <span>Create Recipe</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="content-header">
+      <div class="header-left">
+        <h1 class="page-title" id="pageTitle">Discover Cocktails</h1>
+        <p class="page-subtitle" id="pageSubtitle">Explore our curated collection</p>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="search" id="searchInput" placeholder="Search drinks..." class="search-input">
+        </div>
+        <button class="btn-filter" id="btnFilter">
+          <span>🎛️</span>
+          <span>Filters</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Views Container -->
+    <div class="views-container">
+      
+      <!-- Discover View -->
+      <section class="view active" id="discoverView">
+        <div class="featured-section">
+          <h2 class="section-title">Featured Cocktails</h2>
+          <div class="featured-grid" id="featuredGrid"></div>
+        </div>
+        
+        <div class="category-section">
+          <h2 class="section-title">Browse by Category</h2>
+          <div class="category-pills">
+            <button class="pill" data-category="all">All Drinks</button>
+            <button class="pill" data-category="classic">Classics</button>
+            <button class="pill" data-category="tropical">Tropical</button>
+            <button class="pill" data-category="sour">Sours</button>
+            <button class="pill" data-category="strong">Strong</button>
+            <button class="pill" data-category="refreshing">Refreshing</button>
+          </div>
+        </div>
+
+        <div class="quick-stats">
+          <div class="stat-card">
+            <div class="stat-icon">🍸</div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalCocktails">0</div>
+              <div class="stat-label">Cocktails</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🍷</div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalWines">0</div>
+              <div class="stat-label">Wines</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🍺</div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalBeers">0</div>
+              <div class="stat-label">Beers</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-info">
+              <div class="stat-value" id="totalCustom">0</div>
+              <div class="stat-label">My Recipes</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cocktails/Wines/Beers View -->
+      <section class="view" id="listView">
+        <div class="results-header">
+          <span class="results-count" id="resultsCount">0 results</span>
+        </div>
+        <div class="items-grid" id="itemsGrid"></div>
+      </section>
+
+      <!-- Custom Cocktails View -->
+      <section class="view" id="customView">
+        <div class="empty-custom" id="emptyCustom">
+          <div class="empty-icon">⭐</div>
+          <h3>No custom cocktails yet</h3>
+          <p>Create your signature recipes and save them here</p>
+          <button class="btn-primary" onclick="document.getElementById('btnCreateCocktail').click()">
+            Create Your First Recipe
+          </button>
+        </div>
+        <div class="items-grid" id="customGrid"></div>
+      </section>
+
+      <!-- AI Assistant View -->
+      <section class="view" id="assistantView">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-avatar">🤖</div>
+            <div>
+              <h3>AI Mixologist</h3>
+              <p>Ask me anything about cocktails!</p>
+            </div>
+          </div>
+          
+          <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+              <div class="message-avatar">🤖</div>
+              <div class="message-content">
+                <p>Hello! I'm your AI mixologist assistant. I can help you:</p>
+                <ul>
+                  <li>Recommend cocktails based on your preferences</li>
+                  <li>Suggest drinks for specific occasions</li>
+                  <li>Find recipes by ingredients</li>
+                  <li>Answer questions about spirits and techniques</li>
+                </ul>
+                <p>What can I help you with today?</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-suggestions" id="chatSuggestions">
+            <button class="suggestion-chip">Recommend a tropical cocktail</button>
+            <button class="suggestion-chip">What can I make with gin?</button>
+            <button class="suggestion-chip">Best cocktail for summer?</button>
+            <button class="suggestion-chip">Easy drinks for beginners</button>
+          </div>
+
+          <form class="chat-input-form" id="chatForm">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." autocomplete="off">
+            <button type="submit" class="chat-send">
+              <span>Send</span>
+              <span>→</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Detail Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-detail">
+      <button class="modal-close" id="closeDetail">✕</button>
+      <div class="detail-header">
+        <div class="detail-emoji" id="detailEmoji">🍸</div>
+        <div class="detail-title-wrap">
+          <h2 class="detail-title" id="detailTitle">Cocktail Name</h2>
+          <div class="detail-meta" id="detailMeta"></div>
+        </div>
+      </div>
+      <div class="detail-body" id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Cocktail Modal -->
+  <div class="modal" id="createModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-form">
+      <button class="modal-close" id="closeCreate">✕</button>
+      <h2 class="modal-title" id="createModalTitle">Create Custom Cocktail</h2>
+      
+      <form class="cocktail-form" id="cocktailForm">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" id="formName" required placeholder="My Signature Cocktail">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Base Spirit *</label>
+            <select id="formBase" required>
+              <option value="">Select...</option>
+              <option value="vodka">Vodka</option>
+              <option value="gin">Gin</option>
+              <option value="rum">Rum</option>
+              <option value="tequila">Tequila</option>
+              <option value="whiskey">Whiskey</option>
+              <option value="brandy">Brandy</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Glass Type</label>
+            <select id="formGlass">
+              <option value="">Select...</option>
+              <option value="rocks">Rocks</option>
+              <option value="highball">Highball</option>
+              <option value="coupe">Coupe</option>
+              <option value="martini">Martini</option>
+              <option value="flute">Flute</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="formDescription" rows="3" placeholder="Describe your cocktail..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Ingredients *</label>
+          <div id="ingredientsList"></div>
+          <button type="button" class="btn-add-ingredient" id="btnAddIngredient">+ Add Ingredient</button>
+        </div>
+
+        <div class="form-group">
+          <label>Preparation Steps</label>
+          <textarea id="formSteps" rows="4" placeholder="1. Step one&#10;2. Step two&#10;3. Step three..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="btnCancelCreate">Cancel</button>
+          <button type="submit" class="btn-primary" id="btnSubmitCreate">Save Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Filter Modal -->
+  <div class="modal" id="filterModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-filter">
+      <button class="modal-close" id="closeFilter">✕</button>
+      <h2 class="modal-title">Filter Drinks</h2>
+      
+      <div class="filter-section">
+        <h3>Base Spirit</h3>
+        <div class="filter-chips" id="filterBase"></div>
+      </div>
+
+      <div class="filter-section">
+        <h3>Strength</h3>
+        <div class="filter-chips" id="filterStrength"></div>
+      </div>
+
+      <div class="filter-section">
+        <h3>Technique</h3>
+        <div class="filter-chips" id="filterTechnique"></div>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn-secondary" id="btnResetFilters">Reset</button>
+        <button class="btn-primary" id="btnApplyFilters">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./database.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Assistant Pro - Cocktails & Spirits Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d4af37;
+            --primary-dark: #b8941f;
+            --secondary: #1a1a2e;
+            --accent: #e63946;
+            --bg-dark: #0f0f1e;
+            --bg-card: #1e1e3f;
+            --text-light: #f8f9fa;
+            --text-gray: #adb5bd;
+            --border: rgba(212, 175, 55, 0.2);
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--secondary) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(230, 57, 70, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary) 0%, #f4e4a8 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        nav {
+            background: rgba(30, 30, 63, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px var(--shadow);
+        }
+
+        nav button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        nav button:hover::before {
+            left: 100%;
+        }
+
+        nav button:hover, nav button.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+            color: var(--secondary);
+        }
+
+        .search-bar {
+            margin-bottom: 40px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-bar input, .search-bar select {
+            padding: 16px 24px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(30, 30, 63, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-gray);
+        }
+
+        .search-bar input:focus, .search-bar select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            background: rgba(30, 30, 63, 0.8);
+        }
+
+        .search-bar select {
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: rgba(30, 30, 63, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px var(--shadow);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--primary);
+            border-color: var(--primary);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 20px 24px;
+            color: var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .card:hover .card-header::after {
+            right: -200%;
+        }
+
+        .card-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-category {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 260px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        .card-image-placeholder {
+            font-size: 5rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-label {
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .ingredients-list {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 0.88rem;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .ingredient {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: center;
+        }
+
+        .ingredient:last-child {
+            border-bottom: none;
+        }
+
+        .ingredient-name {
+            color: var(--text-light);
+        }
+
+        .ingredient-amount {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .expand-btn {
+            margin-top: 20px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--secondary);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .expand-btn:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(26, 26, 46, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid var(--border);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            gap: 20px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .close-btn {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: var(--primary);
+            color: var(--secondary);
+            transform: rotate(90deg);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+        }
+
+        .modal-section {
+            margin-bottom: 30px;
+        }
+
+        .modal-section h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .modal-section p {
+            line-height: 1.9;
+            color: var(--text-gray);
+            font-size: 1.05rem;
+        }
+
+        .modal-section ul, .modal-section ol {
+            margin-left: 24px;
+            color: var(--text-light);
+        }
+
+        .modal-section li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+            color: var(--text-gray);
+        }
+
+        .modal-section li::marker {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            transition: all 0.2s;
+        }
+
+        .ingredient-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(4px);
+        }
+
+        .ingredient-item span:first-child {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .ingredient-item span:last-child {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px 8px 5px 0;
+            font-size: 0.85rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: rgba(212, 175, 55, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-gray);
+            font-size: 1.3rem;
+        }
+
+        .no-results-icon {
+            font-size: 5rem;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            header {
+                padding: 40px 15px 30px;
+                margin-bottom: 30px;
+            }
+
+            nav {
+                padding: 20px 15px;
+                gap: 10px;
+            }
+
+            nav button {
+                width: 100%;
+                padding: 12px 20px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .search-bar input, .search-bar select {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .modal-content {
+                padding: 24px;
+                border-radius: 20px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍸 Bar Assistant</h1>
+            <p class="subtitle">Master the Art of Mixology</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" data-category="all">All</button>
+            <button class="nav-btn" data-category="cocktails">Classic Cocktails</button>
+            <button class="nav-btn" data-category="spirits">Spirits</button>
+            <button class="nav-btn" data-category="beers">Beers</button>
+            <button class="nav-btn" data-category="wines">Wines</button>
+            <button class="nav-btn" data-category="liquors">Liquors</button>
+        </nav>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by name, ingredient, or type...">
+            <select id="filterSelect">
+                <option value="">All Types</option>
+                <option value="vodka">Vodka-based</option>
+                <option value="gin">Gin-based</option>
+                <option value="rum">Rum-based</option>
+                <option value="tequila">Tequila-based</option>
+                <option value="whiskey">Whiskey-based</option>
+                <option value="brandy">Brandy-based</option>
+            </select>
+        </div>
+
+        <div class="content" id="contentArea"></div>
+    </div>
+
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Bar Assistant with real cocktail images and Liquor.com recipes
+
+        const database = {
+          cocktails: [
+            {
+              id: 1,
+              name: "Margarita",
+              category: "cocktails",
+              type: "tequila",
+              image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=800&q=80",
+              description: "The Margarita is a timeless classic with a perfect balance of tequila, lime, and orange liqueur. Served in a salt-rimmed glass, it's refreshing and sophisticated.",
+              ingredients: [
+                { name: "Tequila (Blanco)", amount: "2 oz" },
+                { name: "Cointreau", amount: "1 oz" },
+                { name: "Fresh Lime Juice", amount: "1 oz" },
+                { name: "Agave Syrup (optional)", amount: "0.25 oz" }
+              ],
+              method:
+                "1. Rim a rocks glass with salt by running a lime wedge around the rim and dipping it in coarse salt\n" +
+                "2. Add tequila, Cointreau, lime juice, and agave syrup to a cocktail shaker with ice\n" +
+                "3. Shake vigorously for 15 seconds until well-chilled\n" +
+                "4. Strain into the prepared glass over fresh ice\n" +
+                "5. Garnish with a lime wheel",
+              glass: "Rocks Glass",
+              garnish: "Lime wheel, Salt rim",
+              difficulty: "Easy",
+              strength: "Medium",
+              taste: "Citrus, Tangy, Refreshing"
+            },
+            {
+              id: 2,
+              name: "Mojito",
+              category: "cocktails",
+              type: "rum",
+              image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&q=80",
+              description: "This refreshing Cuban cocktail combines white rum, fresh mint, lime, and soda water. Perfect for hot summer days with its cooling, herbaceous flavor.",
+              ingredients: [
+                { name: "White Rum", amount: "2 oz" },
+                { name: "Fresh Lime Juice", amount: "0.75 oz" },
+                { name: "Simple Syrup", amount: "0.5 oz" },
+                { name: "Fresh Mint Leaves", amount: "10-12 leaves" },
+                { name: "Club Soda", amount: "2 oz" }
+              ],
+              method:
+                "1. Place mint leaves in a highball glass\n" +
+                "2. Add lime juice and simple syrup\n" +
+                "3. Gently muddle the mint (don't over-muddle or it will become bitter)\n" +
+                "4. Add rum and fill the glass with crushed ice\n" +
+                "5. Top with club soda and stir gently\n" +
+                "6. Garnish with a mint sprig and lime wedge",
+              glass: "Highball",
+              garnish: "Mint sprig, Lime wedge",
+              difficulty: "Easy",
+              strength: "Light",
+              taste: "Minty, Fresh, Citrusy"
+            },
+            {
+              id: 3,
+              name: "Old Fashioned",
+              category: "cocktails",
+              type: "whiskey",
+              image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80",
+              description: "The Old Fashioned is a sophisticated whiskey cocktail that dates back to the 1800s. It's spirit-forward with subtle sweetness and aromatic bitters.",
+              ingredients: [
+                { name: "Bourbon or Rye Whiskey", amount: "2 oz" },
+                { name: "Simple Syrup", amount: "0.25 oz" },
+                { name: "Angostura Bitters", amount: "2-3 dashes" },
+                { name: "Orange Peel", amount: "1 piece" }
+              ],
+              method:
+                "1. Add simple syrup and bitters to a rocks glass\n" +
+                "2. Add a large ice cube or sphere\n" +
+                "3. Pour in the whiskey\n" +
+                "4. Stir gently for about 30 seconds to chill and dilute\n" +
+                "5. Express orange peel oils over the drink by squeezing the peel\n" +
+                "6. Rub the peel around the rim and drop it into the glass",
+              glass: "Rocks Glass",
+              garnish: "Orange peel, Luxardo cherry (optional)",
+              difficulty: "Easy",
+              strength: "Strong",
+              taste: "Whiskey-forward, Slightly sweet, Aromatic"
+            },
+            {
+              id: 4,
+              name: "Dry Martini",
+              category: "cocktails",
+              type: "gin",
+              image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&q=80",
+              description: "The epitome of cocktail elegance, the Dry Martini is a simple yet sophisticated blend of gin and dry vermouth. Shaken or stirred, it's timelessly chic.",
+              ingredients: [
+                { name: "London Dry Gin", amount: "2.5 oz" },
+                { name: "Dry Vermouth", amount: "0.5 oz" }
+              ],
+              method:
+                "1. Add gin and vermouth to a mixing glass filled with ice\n" +
+                "2. Stir for 30-40 seconds until very cold (never shake a martini)\n" +
+                "3. Strain into a chilled coupe or martini glass\n" +
+                "4. Express lemon peel oils over the drink or garnish with an olive",
+              glass: "Coupe or Martini Glass",
+              garnish: "Lemon twist or Green olive",
+              difficulty: "Medium",
+              strength: "Strong",
+              taste: "Crisp, Botanical, Dry"
+            },
+            {
+              id: 5,
+              name: "Negroni",
+              category: "cocktails",
+              type: "gin",
+              image: "https://images.unsplash.com/photo-1609951651556-5334e2706168?w=800&q=80",
+              description: "A bold Italian aperitivo with equal parts gin, Campari, and sweet vermouth. The Negroni is bitter, complex, and utterly addictive.",
+              ingredients: [
+                { name: "London Dry Gin", amount: "1 oz" },
+                { name: "Campari", amount: "1 oz" },
+                { name: "Sweet Vermouth", amount: "1 oz" }
+              ],
+              method:
+                "1. Add gin, Campari, and sweet vermouth to a mixing glass with ice\n" +
+                "2. Stir for 20-30 seconds until well-chilled\n" +
+                "3. Strain into a rocks glass over a large ice cube\n" +
+                "4. Express orange peel oils over the drink\n" +
+                "5. Garnish with the orange peel",
+              glass: "Rocks Glass",
+              garnish: "Orange peel",
+              difficulty: "Easy",
+              strength: "Strong",
+              taste: "Bitter, Herbal, Balanced"
+            },
+            {
+              id: 6,
+              name: "Whiskey Sour",
+              category: "cocktails",
+              type: "whiskey",
+              image: "https://images.unsplash.com/photo-1615332215708-13fa74d1494e?w=800&q=80",
+              description: "A perfectly balanced sour cocktail featuring whiskey, lemon juice, and simple syrup. The optional egg white adds silky texture.",
+              ingredients: [
+                { name: "Bourbon", amount: "2 oz" },
+                { name: "Fresh Lemon Juice", amount: "0.75 oz" },
+                { name: "Simple Syrup", amount: "0.5 oz" },
+                { name: "Egg White (optional)", amount: "1" }
+              ],
+              method:
+                "1. Add all ingredients to a shaker without ice (if using egg white)\n" +
+                "2. Dry shake for 10 seconds to emulsify the egg white\n" +
+                "3. Add ice and shake vigorously for 15 seconds\n" +
+                "4. Strain into a rocks glass over fresh ice or serve up in a coupe\n" +
+                "5. Garnish with a lemon wheel and cherry",
+              glass: "Rocks Glass or Coupe",
+              garnish: "Lemon wheel, Luxardo cherry",
+              difficulty: "Medium",
+              strength: "Medium",
+              taste: "Tart, Sweet, Smooth"
+            },
+            {
+              id: 7,
+              name: "Daiquiri",
+              category: "cocktails",
+              type: "rum",
+              image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=800&q=80",
+              description: "The classic Daiquiri is a simple yet perfect cocktail of white rum, fresh lime juice, and simple syrup. Hemingway's favorite drink.",
+              ingredients: [
+                { name: "White Rum", amount: "2 oz" },
+                { name: "Fresh Lime Juice", amount: "0.75 oz" },
+                { name: "Simple Syrup", amount: "0.5 oz" }
+              ],
+              method:
+                "1. Add rum, lime juice, and simple syrup to a cocktail shaker with ice\n" +
+                "2. Shake vigorously for 15 seconds\n" +
+                "3. Strain into a chilled coupe glass\n" +
+                "4. Garnish with a lime wheel",
+              glass: "Coupe",
+              garnish: "Lime wheel",
+              difficulty: "Easy",
+              strength: "Medium",
+              taste: "Tart, Clean, Refreshing"
+            },
+            {
+              id: 8,
+              name: "Manhattan",
+              category: "cocktails",
+              type: "whiskey",
+              image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&q=80",
+              description: "A classic New York cocktail combining whiskey and sweet vermouth with a dash of bitters. Sophisticated and spirit-forward.",
+              ingredients: [
+                { name: "Rye Whiskey", amount: "2 oz" },
+                { name: "Sweet Vermouth", amount: "1 oz" },
+                { name: "Angostura Bitters", amount: "2 dashes" }
+              ],
+              method:
+                "1. Add whiskey, sweet vermouth, and bitters to a mixing glass with ice\n" +
+                "2. Stir for 30 seconds until well-chilled\n" +
+                "3. Strain into a chilled coupe or martini glass\n" +
+                "4. Garnish with a luxardo cherry",
+              glass: "Coupe or Martini Glass",
+              garnish: "Luxardo cherry",
+              difficulty: "Easy",
+              strength: "Strong",
+              taste: "Rich, Sweet, Aromatic"
+            },
+            {
+              id: 9,
+              name: "Espresso Martini",
+              category: "cocktails",
+              type: "vodka",
+              image: "https://images.unsplash.com/photo-1609951651556-5334e2706168?w=800&q=80",
+              description: "A modern classic that combines vodka, coffee liqueur, and fresh espresso. It's dessert and cocktail in one sophisticated package.",
+              ingredients: [
+                { name: "Vodka", amount: "2 oz" },
+                { name: "Coffee Liqueur (Kahlúa)", amount: "0.5 oz" },
+                { name: "Fresh Espresso", amount: "1 oz" },
+                { name: "Simple Syrup", amount: "0.25 oz" }
+              ],
+              method:
+                "1. Brew a shot of fresh espresso and let it cool slightly\n" +
+                "2. Add vodka, coffee liqueur, espresso, and simple syrup to a shaker with ice\n" +
+                "3. Shake very vigorously for 20 seconds to create foam\n" +
+                "4. Strain into a chilled coupe or martini glass\n" +
+                "5. Garnish with three coffee beans",
+              glass: "Coupe or Martini Glass",
+              garnish: "3 coffee beans",
+              difficulty: "Medium",
+              strength: "Medium",
+              taste: "Coffee-forward, Smooth, Sweet"
+            },
+            {
+              id: 10,
+              name: "Paloma",
+              category: "cocktails",
+              type: "tequila",
+              image: "https://images.unsplash.com/photo-1598679253544-2c97992403f8?w=800&q=80",
+              description: "Mexico's most popular cocktail, the Paloma is a refreshing mix of tequila and grapefruit soda. Simple, delicious, and perfect for any occasion.",
+              ingredients: [
+                { name: "Tequila (Blanco)", amount: "2 oz" },
+                { name: "Fresh Lime Juice", amount: "0.5 oz" },
+                { name: "Grapefruit Soda (Jarritos)", amount: "4 oz" },
+                { name: "Salt", amount: "Pinch" }
+              ],
+              method:
+                "1. Rim a highball glass with salt\n" +
+                "2. Fill the glass with ice\n" +
+                "3. Add tequila and lime juice\n" +
+                "4. Top with grapefruit soda\n" +
+                "5. Stir gently and garnish with a grapefruit wedge",
+              glass: "Highball",
+              garnish: "Grapefruit wedge, Salt rim",
+              difficulty: "Easy",
+              strength: "Light",
+              taste: "Citrusy, Refreshing, Slightly bitter"
+            }
+          ],
+          spirits: [
+            {
+              id: 101,
+              name: "Vodka",
+              category: "spirits",
+              type: "vodka",
+              image: "https://images.unsplash.com/photo-1560508564-27a4ab4579f0?w=800&q=80",
+              description: "A neutral spirit distilled from grains, potatoes, or sometimes grapes. Vodka is the most versatile spirit for mixing, prized for its clean, pure taste.",
+              abv: "40% ABV (typical)",
+              origin: "Eastern Europe (Russia/Poland)"
+            },
+            {
+              id: 102,
+              name: "Gin",
+              category: "spirits",
+              type: "gin",
+              image: "https://images.unsplash.com/photo-1588318976331-5aa7f1e08d01?w=800&q=80",
+              description: "A juniper-forward spirit with botanical complexity. London Dry is the classic style, while modern gins explore creative botanical blends.",
+              abv: "37.5–47% ABV",
+              origin: "England / Netherlands"
+            },
+            {
+              id: 103,
+              name: "Tequila",
+              category: "spirits",
+              type: "tequila",
+              image: "https://images.unsplash.com/photo-1596285991652-a4d8c8e6e0d2?w=800&q=80",
+              description: "Distilled from blue agave in Mexico. Blanco (unaged) is fresh and agave-forward, while Reposado and Añejo are aged in oak barrels.",
+              abv: "35–40% ABV",
+              origin: "Mexico (Jalisco)"
+            },
+            {
+              id: 104,
+              name: "Rum",
+              category: "spirits",
+              type: "rum",
+              image: "https://images.unsplash.com/photo-1514361892635-6b07e31e75f9?w=800&q=80",
+              description: "Distilled from sugarcane or molasses. White rum is light and mixable, gold rum is aged, and dark rum is rich and full-bodied.",
+              abv: "37.5–50% ABV",
+              origin: "Caribbean"
+            },
+            {
+              id: 105,
+              name: "Whiskey",
+              category: "spirits",
+              type: "whiskey",
+              image: "https://images.unsplash.com/photo-1527281400098-83e27e38d65e?w=800&q=80",
+              description: "Aged grain spirit with varieties including Bourbon (corn-based, American), Rye (spicy), Scotch (malted barley), and Irish (smooth).",
+              abv: "40–50% ABV",
+              origin: "Scotland / Ireland / USA"
+            },
+            {
+              id: 106,
+              name: "Brandy",
+              category: "spirits",
+              type: "brandy",
+              image: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=800&q=80",
+              description: "Distilled from wine or fermented fruit. Cognac and Armagnac are premium French brandies aged in oak, offering rich, complex flavors.",
+              abv: "35–60% ABV",
+              origin: "France"
+            }
+          ],
+          beers: [
+            {
+              id: 201,
+              name: "Pale Lager",
+              category: "beers",
+              image: "https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=800&q=80",
+              description: "Clean, crisp, and refreshing bottom-fermented beer. Light golden color with mild hop bitterness. The world's most popular beer style.",
+              style: "Pale Lager",
+              abv: "4–5.5% ABV",
+              bitterness: "Low"
+            },
+            {
+              id: 202,
+              name: "IPA (India Pale Ale)",
+              category: "beers",
+              image: "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=800&q=80",
+              description: "Hoppy, aromatic ale with pronounced bitterness. American IPAs feature citrus and pine notes, while modern hazy IPAs are juicy and smooth.",
+              style: "American IPA",
+              abv: "6–7.5% ABV",
+              bitterness: "Medium–High"
+            },
+            {
+              id: 203,
+              name: "Stout",
+              category: "beers",
+              image: "https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=800&q=80",
+              description: "Dark, rich beer with roasted malt character. Notes of coffee, chocolate, and caramel. Irish Stout (like Guinness) is the classic style.",
+              style: "Irish Stout",
+              abv: "4–7% ABV",
+              bitterness: "Medium"
+            },
+            {
+              id: 204,
+              name: "Wheat Beer",
+              category: "beers",
+              image: "https://images.unsplash.com/photo-1618183479302-1e0aa382c36b?w=800&q=80",
+              description: "Light, cloudy beer brewed with wheat. German Hefeweizen features banana and clove notes from the yeast. Refreshing and sessionable.",
+              style: "Hefeweizen",
+              abv: "4.5–5.5% ABV",
+              bitterness: "Low"
+            }
+          ],
+          wines: [
+            {
+              id: 301,
+              name: "Cabernet Sauvignon",
+              category: "wines",
+              image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80",
+              description: "Full-bodied red wine with bold tannins and dark fruit flavors. Notes of blackcurrant, cedar, and tobacco. Pairs excellently with red meat.",
+              style: "Red Wine",
+              sweetness: "Dry",
+              abv: "13–15% ABV"
+            },
+            {
+              id: 302,
+              name: "Sauvignon Blanc",
+              category: "wines",
+              image: "https://images.unsplash.com/photo-1474722883778-ab0fdaa7a0e2?w=800&q=80",
+              description: "Crisp white wine with vibrant acidity. Citrus, green apple, and herbaceous notes. New Zealand style is zesty and tropical.",
+              style: "White Wine",
+              sweetness: "Dry",
+              abv: "12–13% ABV"
+            },
+            {
+              id: 303,
+              name: "Pinot Noir",
+              category: "wines",
+              image: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&q=80",
+              description: "Light to medium-bodied red with silky texture. Red fruit flavors with earthy, mushroom notes. Burgundy produces the world's finest examples.",
+              style: "Red Wine",
+              sweetness: "Dry",
+              abv: "12–14% ABV"
+            },
+            {
+              id: 304,
+              name: "Chardonnay",
+              category: "wines",
+              image: "https://images.unsplash.com/photo-1586370434639-0fe43b2d32d6?w=800&q=80",
+              description: "Versatile white wine ranging from crisp and mineral to rich and buttery. Oak-aged versions have vanilla and toast notes.",
+              style: "White Wine",
+              sweetness: "Dry",
+              abv: "13–14% ABV"
+            },
+            {
+              id: 305,
+              name: "Rosé",
+              category: "wines",
+              image: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=800&q=80",
+              description: "Pink wine with light, refreshing fruit flavors. Made with brief skin contact from red grapes. Provence rosé is the gold standard.",
+              style: "Rosé Wine",
+              sweetness: "Off-Dry",
+              abv: "11–13% ABV"
+            }
+          ],
+          liquors: [
+            {
+              id: 401,
+              name: "Cointreau",
+              category: "liquors",
+              image: "https://images.unsplash.com/photo-1595981234058-2c08f2e7c16f?w=800&q=80",
+              description: "Premium orange liqueur from France. Triple sec style with sweet and bitter orange peel. Essential for Margaritas and Cosmopolitans.",
+              sweetness: "Sweet",
+              abv: "40% ABV"
+            },
+            {
+              id: 402,
+              name: "Amaretto",
+              category: "liquors",
+              image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=800&q=80",
+              description: "Italian almond-flavored liqueur with sweet, nutty taste. Made from apricot pits or almonds. Popular in dessert cocktails.",
+              sweetness: "Sweet",
+              abv: "21–28% ABV"
+            },
+            {
+              id: 403,
+              name: "Kahlúa",
+              category: "liquors",
+              image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&q=80",
+              description: "Coffee-flavored liqueur from Mexico. Rich coffee flavor with vanilla and rum base. Essential for Espresso Martinis and White Russians.",
+              sweetness: "Sweet",
+              abv: "20% ABV"
+            },
+            {
+              id: 404,
+              name: "Campari",
+              category: "liquors",
+              image: "https://images.unsplash.com/photo-1586933985216-8dc74a92f4a7?w=800&q=80",
+              description: "Bitter Italian liqueur with complex herbal profile. Bright red color from natural carmine. Key ingredient in Negroni and Americano.",
+              sweetness: "Bitter",
+              abv: "20.5–28% ABV"
+            },
+            {
+              id: 405,
+              name: "Baileys Irish Cream",
+              category: "liquors",
+              image: "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?w=800&q=80",
+              description: "Creamy Irish whiskey liqueur with chocolate and vanilla. Smooth and indulgent, perfect over ice or in coffee.",
+              sweetness: "Sweet",
+              abv: "17% ABV"
+            }
+          ]
+        };
+
+        // --- DOM Elements ---
+        const contentArea = document.getElementById("contentArea");
+        const searchInput = document.getElementById("searchInput");
+        const filterSelect = document.getElementById("filterSelect");
+        const navBtns = Array.from(document.querySelectorAll(".nav-btn"));
+        const modal = document.getElementById("detailModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+
+        // --- State ---
+        const state = {
+          category: "all",
+          query: "",
+          base: ""
+        };
+
+        // --- Utils ---
+        const byName = (a, b) => a.name.localeCompare(b.name);
+        const norm = (s = "") => String(s).toLowerCase();
+        const escapeHtml = (s = "") =>
+          String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        function debounce(fn, ms = 300) {
+          let t;
+          return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn(...args), ms);
+          };
+        }
+
+        function allItems() {
+          return Object.values(database).flat().slice().sort(byName);
+        }
+
+        const itemById = new Map(allItems().map((x) => [String(x.id), x]));
+
+        // --- Rendering ---
+        function render() {
+          const items = filterItems();
+          if (!items.length) {
+            contentArea.innerHTML = `
+              <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <p>No results found. Try a different search or filter.</p>
+              </div>
+            `;
+            return;
+          }
+
+          const html = items.map(cardHTML).join("");
+          contentArea.innerHTML = html;
+        }
+
+        function filterItems() {
+          const q = norm(state.query);
+          const base = norm(state.base);
+          const cat = state.category;
+
+          return allItems().filter((item) => {
+            if (cat !== "all" && item.category !== cat) return false;
+
+            if (base) {
+              if (!item.type || norm(item.type) !== base) return false;
+            }
+
+            if (q) {
+              const fields = [
+                norm(item.name),
+                norm(item.type || ""),
+                norm(item.description || "")
+              ];
+
+              if (Array.isArray(item.ingredients)) {
+                fields.push(...item.ingredients.map((ing) => norm(ing.name)));
+              }
+
+              ["style", "sweetness", "bitterness", "abv", "origin", "glass", "garnish", "difficulty", "strength", "taste"]
+                .forEach((k) => fields.push(norm(item[k] || "")));
+
+              if (!fields.some((f) => f.includes(q))) return false;
+            }
+
+            return true;
+          });
+        }
+
+        function cap(s) {
+          return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+        }
+
+        function cardHTML(item) {
+          const hasIngredients = Array.isArray(item.ingredients) && item.ingredients.length;
+          const previewIngredients = hasIngredients
+            ? `
+              <div class="ingredients-list">
+                ${item.ingredients.slice(0, 3).map(ing => `
+                  <div class="ingredient">
+                    <span class="ingredient-name">${escapeHtml(ing.name)}</span>
+                    <span class="ingredient-amount">${escapeHtml(ing.amount || "")}</span>
+                  </div>
+                `).join("")}
+                ${item.ingredients.length > 3 ? `<div style="opacity:.6;font-size:.85em;margin-top:10px;text-align:center;color:var(--primary)">+${item.ingredients.length - 3} more ingredients</div>` : ""}
+              </div>
+            `
+            : "";
+
+          const details = [
+            item.type ? detailRow("Base", cap(item.type)) : "",
+            item.glass ? detailRow("Glass", item.glass) : "",
+            item.difficulty ? detailRow("Difficulty", item.difficulty) : "",
+            item.strength ? detailRow("Strength", item.strength) : "",
+            item.style ? detailRow("Style", item.style) : "",
+            item.bitterness ? detailRow("Bitterness", item.bitterness) : "",
+            item.sweetness ? detailRow("Sweetness", item.sweetness) : "",
+            item.abv ? detailRow("ABV", item.abv) : "",
+            item.origin ? detailRow("Origin", item.origin) : ""
+          ].filter(Boolean).join("");
+
+          return `
+            <div class="card" data-id="${String(item.id)}" role="button" tabindex="0" aria-label="Open details for ${escapeHtml(item.name)}">
+              <div class="card-header">
+                <h3>${escapeHtml(item.name)}</h3>
+                <div class="card-category">${escapeHtml(cap(item.category))}</div>
+              </div>
+              <div class="card-image">
+                ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy">` : `<div class="card-image-placeholder">🍸</div>`}
+              </div>
+              <div class="card-content">
+                <p class="card-description">${escapeHtml(item.description || "")}</p>
+                <div class="card-details">
+                  ${details}
+                </div>
+                ${previewIngredients}
+                <button class="expand-btn" data-id="${String(item.id)}">View Full Recipe</button>
+              </div>
+            </div>
+          `;
+        }
+
+        function detailRow(label, value) {
+          return `
+            <div class="detail-item">
+              <div class="detail-label">${escapeHtml(label)}</div>
+              <div class="detail-value">${escapeHtml(value)}</div>
+            </div>
+          `;
+        }
+
+        // --- Modal ---
+        function openModal(item) {
+          modalTitle.textContent = item.name;
+
+          const tags = [
+            item.category ? `<span class="tag">${escapeHtml(cap(item.category))}</span>` : "",
+            item.type ? `<span class="tag">${escapeHtml(cap(item.type))}</span>` : "",
+            item.difficulty ? `<span class="tag">${escapeHtml(item.difficulty)}</span>` : "",
+            item.strength ? `<span class="tag">${escapeHtml(item.strength)}</span>` : "",
+            item.taste ? `<span class="tag">${escapeHtml(item.taste)}</span>` : "",
+            item.abv ? `<span class="tag">${escapeHtml(item.abv)}</span>` : ""
+          ].filter(Boolean).join("");
+
+          const details = [
+            item.glass ? detailRow("Glass", item.glass) : "",
+            item.garnish ? detailRow("Garnish", item.garnish) : "",
+            item.style ? detailRow("Style", item.style) : "",
+            item.bitterness ? detailRow("Bitterness", item.bitterness) : "",
+            item.sweetness ? detailRow("Sweetness", item.sweetness) : "",
+            item.origin ? detailRow("Origin", item.origin) : ""
+          ].filter(Boolean).join("");
+
+          const ingredients = Array.isArray(item.ingredients) && item.ingredients.length
+            ? `
+              <div class="modal-section">
+                <h3>Ingredients</h3>
+                <div>
+                  ${item.ingredients.map(ing => `
+                    <div class="ingredient-item">
+                      <span>${escapeHtml(ing.name)}</span>
+                      <span>${escapeHtml(ing.amount || "")}</span>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            `
+            : "";
+
+          const method = item.method
+            ? `
+              <div class="modal-section">
+                <h3>Preparation</h3>
+                <ol>
+                  ${String(item.method).split(/\n+/).map(step => `<li>${escapeHtml(step.replace(/^\d+\.\s*/, ""))}</li>`).join("")}
+                </ol>
+              </div>
+            `
+            : "";
+
+          modalBody.innerHTML = `
+            <div class="modal-section">
+              <h3>About</h3>
+              <p>${escapeHtml(item.description || "")}</p>
+              <div style="margin-top:15px">${tags}</div>
+            </div>
+
+            ${details ? `
+              <div class="modal-section">
+                <h3>Details</h3>
+                ${details}
+              </div>` : ""}
+
+            ${ingredients}
+            ${method}
+          `;
+
+          modal.classList.add("active");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          modal.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+
+        window.closeModal = closeModal;
+
+        // --- Events ---
+        navBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            navBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            state.category = btn.dataset.category || "all";
+            render();
+          });
+        });
+
+        searchInput.addEventListener("input", debounce((e) => {
+          state.query = e.target.value || "";
+          render();
+        }, 300));
+
+        filterSelect.addEventListener("change", (e) => {
+          state.base = e.target.value || "";
+          render();
+        });
+
+        contentArea.addEventListener("click", (e) => {
+          const expandBtn = e.target.closest(".expand-btn");
+          const card = e.target.closest(".card");
+          const id = expandBtn?.dataset.id || card?.dataset.id;
+          if (!id) return;
+          const item = itemById.get(String(id));
+          if (item) openModal(item);
+        });
+
+        contentArea.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            const card = e.target.closest(".card");
+            if (!card) return;
+            const item = itemById.get(String(card.dataset.id));
+            if (item) {
+              e.preventDefault();
+              openModal(item);
+            }
+          }
+        });
+
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && modal.classList.contains("active")) {
+            closeModal();
+          }
+        });
+
+        // --- Init ---
+        render();
+    </script>
+</body>
+</html>
+
